@@ -1,0 +1,22 @@
+
+The program is gpuNemo for network motif discovery on GPU (see the paper in ICDE 2015).
+
+The parameters taken as input by the program are as follows.
+
+Usage: gpuNemo options[inputfile...] 
+ 	-h	--help			Display this usage information. 
+	-i	--input filename	Input filename.
+	-o	--output path		Output directory (default is the folder 'result').
+	-r 	--random number 	Number of random graphs (default = 0).
+	-s 	--size motifsize 	Motif size.
+	-u 	--undirected 	Undirected input graph.
+	-g 	--GPU Device ID 	default = 0
+
+For example, a command to run the program is:
+
+./gpuNemo -i networks/yeast -s 4 -r 100 -o result -g 0 -u
+
+The included executable program is compiled with CUDA 5.5 (supporting up to sm_35 or compute_35 architecture) on a Linux machine (Debian 3.2.65 x86_64).
+
+If encountering any issues, please report to edwlin@me.com. Thanks.
+

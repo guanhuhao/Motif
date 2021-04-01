@@ -1,0 +1,96 @@
+==6212== NVPROF is profiling process 6212, command: ./gpuNemo -i /home/guan/桌面/Motif/data/undirected-688-yeast.txt -s 4 -r 100 -o result/undirected-688-yeast -g 0 -u
+Using Device 0: "GeForce GTX 1060 6GB"
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/data/undirected-688-yeast.txt
+Opening result/undirected-688-yeast/adjMatrix.txt ...
+==6212== 
+Real Graph Completed!!!
+
+Real Graph Runtime: 92049.000000 (s)
+
+Number of Random Graphs: 100
+
+flag1
+
+Random Graphs Completed!!!
+Writing ZScores to result/undirected-688-yeast/ZScore.txt ...
+Destroying graph ...
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 1079 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 172254
+Number of non-isomorphic classes: 6
+
+Time Used for Main:      0.013231
+Avg Time Used for Rands: 0.000092
+
+mytest:
+Init and Load Time: 0.077555
+CPU RunTime: 0.000000
+GPU Runtime: 1.742993
+Totol Runtime: 1.833871
+
+=============================
+Profiling application: ./gpuNemo -i /home/guan/桌面/Motif/data/undirected-688-yeast.txt -s 4 -r 100 -o result/undirected-688-yeast -g 0 -u
+==6212== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   26.19%  162.55ms        53  3.0669ms  2.1440us  5.4158ms  comb4_large(int, int, int, int*, int*, int*, int*, int*)
+                   12.23%  75.918ms        57  1.3319ms  2.2080us  2.1967ms  tupleChecking5(int*, int, int, int**, int**, EdgeType*, int, int)
+                   11.02%  68.369ms       150  455.79us  3.2320us  2.1622ms  prescan_true_false(int*, int*, int*, int, int, int)
+                    9.16%  56.860ms        60  947.66us  89.346us  1.5790ms  tupleCopy3(int*, int, int*, int*)
+                    8.23%  51.063ms        61  837.10us  1.2160us  1.3620ms  markOcc3(int*, int, int*)
+                    5.55%  34.462ms       138  249.73us  2.6240us  522.15us  void thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>(thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>*, bool=1 const *, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**, bool=0*, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**, int, int, thrust::cuda_cub::cub::GridEvenShare<thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**>)
+                    5.25%  32.607ms       300  108.69us  1.1840us  990.48us  uniformAdd(int*, int*, int, int, int)
+                    3.92%  24.316ms        46  528.62us  2.3680us  868.05us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::cuda_cub::__transform::no_stencil_tag, copySecondElementWithDivideStc<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::cuda_cub::__transform::no_stencil_tag, copySecondElementWithDivideStc<int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<int>, thrust::detail::normal_iterator<thrust::device_ptr<int>>)
+                    3.18%  19.733ms        92  214.49us  3.0400us  359.66us  void thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>(thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>*, bool=0 const *, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**, bool=0*, thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**, int, int, thrust::cuda_cub::cub::GridEvenShare<thrust::cuda_cub::cub::DeviceRadixSortDownsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, thrust::cuda_cub::cub::NullType, int>**>)
+                    2.78%  17.231ms       138  124.86us  3.7120us  271.01us  void thrust::cuda_cub::cub::DeviceRadixSortUpsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=1, bool=0, unsigned int, int>(thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, bool=1*, thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, int, int, thrust::cuda_cub::cub::GridEvenShare<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *>)
+                    2.25%  13.942ms         8  1.7427ms  339.69us  4.0055ms  comb4(int, int, int*, int*, int*, int*, int*)
+                    1.94%  12.020ms        92  130.66us  5.6000us  325.13us  void thrust::cuda_cub::cub::DeviceRadixSortUpsweepKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, bool=0, bool=0, unsigned int, int>(thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, bool=0*, thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *, int, int, thrust::cuda_cub::cub::GridEvenShare<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620 const *>)
+                    1.59%  9.8522ms        46  214.18us  1.5360us  378.50us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<unsigned int*, unsigned int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<unsigned int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<unsigned int*, unsigned int*, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<unsigned int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(unsigned int*, thrust::cuda_cub::__transform::no_stencil_tag)
+                    1.56%  9.6527ms        46  209.84us  1.2800us  349.54us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::detail::normal_iterator<thrust::device_ptr<unsigned int const >>, thrust::device_ptr<unsigned int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<unsigned int>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::detail::normal_iterator<thrust::device_ptr<unsigned int const >>, thrust::device_ptr<unsigned int>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<unsigned int>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::device_ptr<unsigned int const >, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int const >>)
+                    1.15%  7.1081ms        46  154.52us  6.6240us  300.65us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce_by_key::ReduceByKeyAgent<thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::constant_iterator<unsigned int, thrust::use_default, thrust::use_default>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::equal_to<unsigned int>, thrust::plus<unsigned int>, int*, int>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::constant_iterator<unsigned int, thrust::use_default, thrust::use_default>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, int*, thrust::cuda_cub::cub::ReduceByKeyScanTileState<unsigned int, int, bool=1>, thrust::equal_to<unsigned int>, thrust::plus<unsigned int>, int, int>(thrust::device_ptr<unsigned int>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, unsigned int, thrust::use_default, thrust::use_default, thrust::constant_iterator<unsigned int, thrust::use_default, thrust::use_default>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, unsigned int, thrust::equal_to<unsigned int>)
+                    0.86%  5.3235ms        46  115.73us  3.5200us  190.60us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce::ReduceAgent<thrust::cuda_cub::transform_pair_of_input_iterators_t<unsigned int, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::not_equal_to<unsigned int>>, unsigned int*, unsigned int, long, thrust::plus<unsigned int>>, thrust::cuda_cub::transform_pair_of_input_iterators_t<unsigned int, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::not_equal_to<unsigned int>>, unsigned int*, long, thrust::cuda_cub::cub::GridEvenShare<int>, thrust::cuda_cub::cub::GridQueue<int>, thrust::plus<unsigned int>>(unsigned int, thrust::device_ptr<unsigned int>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, thrust::detail::normal_iterator<thrust::device_ptr<unsigned int>>, unsigned int, thrust::not_equal_to<unsigned int>)
+                    0.77%  4.7481ms       138  34.406us     672ns  172.13us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__uninitialized_fill::functor<thrust::device_ptr<unsigned int>, unsigned int>, unsigned long>, thrust::cuda_cub::__uninitialized_fill::functor<thrust::device_ptr<unsigned int>, unsigned int>, unsigned long>(thrust::device_ptr<unsigned int>, unsigned int)
+                    0.76%  4.7349ms        46  102.93us  1.1840us  174.21us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__tabulate::functor<thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>, thrust::cuda_cub::__tabulate::functor<thrust::detail::normal_iterator<thrust::device_ptr<int>>, thrust::system::detail::generic::sequence_detail::sequence_functor<int>, long>, long>(thrust::device_ptr<int>, thrust::detail::normal_iterator<thrust::device_ptr<int>>)
+                    0.76%  4.7270ms        46  102.76us  1.3760us  179.52us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__uninitialized_fill::functor<thrust::device_ptr<int>, int>, unsigned long>, thrust::cuda_cub::__uninitialized_fill::functor<thrust::device_ptr<int>, int>, unsigned long>(thrust::device_ptr<int>, int)
+                    0.26%  1.6133ms        20  80.663us  6.3040us  266.79us  gpuComputeDegree3(int*, int**, int, int, int, int*, int*)
+                    0.24%  1.4888ms        27  55.140us     512ns  361.38us  [CUDA memcpy HtoD]
+                    0.15%  917.11us       230  3.9870us  2.9440us  4.7360us  void thrust::cuda_cub::cub::RadixSortScanBinsKernel<thrust::cuda_cub::cub::DeviceRadixSortPolicy<unsigned int, thrust::cuda_cub::cub::NullType, int>::Policy620, int>(thrust::cuda_cub::cub::NullType*, int)
+                    0.08%  522.12us       150  3.4800us  2.3040us  4.7360us  prescan_true_true(int*, int*, int*, int, int, int)
+                    0.04%  250.56us        78  3.2120us  2.3040us  4.0000us  prescan_false_true(int*, int*, int*, int, int, int)
+                    0.04%  229.54us       265     866ns     608ns  2.2720us  [CUDA memcpy DtoH]
+                    0.02%  105.82us        46  2.3000us  2.0800us  2.6560us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce::ReduceAgent<unsigned int*, unsigned int*, unsigned int, long, thrust::plus<unsigned int>>, unsigned int*, unsigned int*, int, thrust::plus<unsigned int>, unsigned int>(unsigned int*, unsigned int, long, unsigned int, thrust::plus<unsigned int>)
+                    0.02%  99.042us        81  1.2220us  1.0560us  1.4400us  retrieveVal(int*, int*, int, int*)
+                    0.01%  84.801us        68  1.2470us     896ns  1.6320us  ptrCopy(int**, int*, int)
+                    0.01%  71.520us        46  1.5540us  1.2800us  1.7600us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce::DrainAgent<long>, thrust::cuda_cub::cub::GridQueue<int>, long>(thrust::cuda_cub::__reduce::DrainAgent<long>, int)
+                    0.01%  58.881us        46  1.2800us  1.1520us  1.4730us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce_by_key::InitAgent<thrust::cuda_cub::cub::ReduceByKeyScanTileState<unsigned int, int, bool=1>, int, int*>, thrust::cuda_cub::cub::ReduceByKeyScanTileState<unsigned int, int, bool=1>, int, int*>(int, bool=1, thrust::cuda_cub::cub::ReduceByKeyScanTileState<unsigned int, int, bool=1>)
+                    0.00%  7.2640us         3  2.4210us  2.2080us  2.6240us  prescan_false_false(int*, int*, int*, int, int, int)
+      API calls:   69.32%  650.47ms       618  1.0525ms  4.8780us  13.759ms  cudaFree
+                   11.63%  109.18ms       624  174.97us  6.5420us  4.2865ms  cudaMalloc
+                   11.22%  105.32ms         1  105.32ms  105.32ms  105.32ms  cudaProfilerStart
+                    2.10%  19.728ms       108  182.67us  10.452us  3.9530ms  cudaMemcpy
+                    1.82%  17.100ms      2377  7.1940us  4.2420us  344.45us  cudaLaunch
+                    1.39%  13.050ms        92  141.84us  4.1210us  663.04us  cudaDeviceSynchronize
+                    0.85%  8.0217ms       127  63.163us  47.963us  134.99us  cudaMemGetInfo
+                    0.65%  6.0957ms       644  9.4650us  8.3070us  31.422us  cudaFuncGetAttributes
+                    0.24%  2.2747ms       184  12.362us  8.1420us  29.659us  cudaMemcpyAsync
+                    0.14%  1.2952ms     11655     111ns      77ns  9.3570us  cudaSetupArgument
+                    0.11%  997.15us       644  1.5480us  1.2490us  5.3300us  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.10%  981.64us       966  1.0160us     806ns  2.8200us  cudaGetDevice
+                    0.10%  942.41us       966     975ns     801ns  2.4660us  cudaDeviceGetAttribute
+                    0.06%  588.35us        94  6.2590us     865ns  231.92us  cuDeviceGetAttribute
+                    0.05%  507.79us         1  507.79us  507.79us  507.79us  cudaDeviceReset
+                    0.05%  502.73us         1  502.73us  502.73us  502.73us  cudaGetDeviceProperties
+                    0.05%  470.37us       184  2.5560us  1.8380us  5.0450us  cudaStreamSynchronize
+                    0.04%  381.81us      2377     160ns      98ns  1.3220us  cudaConfigureCall
+                    0.02%  210.58us      1886     111ns      74ns  1.6770us  cudaPeekAtLastError
+                    0.01%  115.47us         1  115.47us  115.47us  115.47us  cuDeviceTotalMem
+                    0.01%  81.228us       388     209ns      95ns  1.8090us  cudaGetLastError
+                    0.01%  64.014us         1  64.014us  64.014us  64.014us  cuDeviceGetName
+                    0.00%  11.372us         1  11.372us  11.372us  11.372us  cudaSetDevice
+                    0.00%  5.5800us         3  1.8600us     892ns  2.4800us  cuDeviceGetCount
+                    0.00%  3.4380us         2  1.7190us  1.1230us  2.3150us  cuDeviceGet
