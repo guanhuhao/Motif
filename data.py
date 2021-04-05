@@ -1,8 +1,53 @@
 import os
 import re
 import random
+import copy
 cur_path = os.getcwd() #获取当前文件绝对路径
 raw_dataDir = os.path.join(cur_path,"raw_data")
+
+
+def baseline(file,tot,data,mark,istext=""):
+    with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+istext,"w") as w:
+        print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
+        w.write(str(tot)+"\n")
+        for i in range(0,len(data), 2):
+            w.write(str(data[i])+" "+str(data[i+1])+"\n")
+
+def deleteEdge(file,tot,data,rate,mark,istext=""):
+    with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+"-DeleteEdge"+str(rate)+istext,"w") as w:
+        print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
+        w.write(str(tot)+"\n")
+        flag=0
+        print(len(data))
+        for i in range(0,len(data), 2):
+            if random.random() < rate : continue;
+            w.write(str(data[i])+" "+str(data[i+1])+"\n")
+
+def AddEdge(file,tot,data,rate,mark,istext=""):
+    dic = {}
+    for i in range(0,len(data), 2):
+        dic[(data[i],data[i+1])] = 1
+        if mark == "undirected" :
+            dic[(data[i+1], data[i])] = 1
+
+    cnt = int(len(data)*rate)
+    while(cnt != 0):
+        cnt-=1
+        u = random.randint(1, tot)
+        v = random.randint(1, tot)
+        if u == v : continue
+        if dic.get((u,v)) : continue
+        data += [u, v]
+        dic[(u, v)] = 1
+        if mark == "undirect":
+            dic[(v, u)] = 1
+
+
+    with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+"-AddEdge"+str(rate)+istext,"w") as w:
+        print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
+        w.write(str(tot)+"\n")
+        for i in range(0,len(data), 2):
+            w.write(str(data[i])+" "+str(data[i+1])+"\n")
 
 for file in os.listdir(raw_dataDir):
     data = []
@@ -10,7 +55,9 @@ for file in os.listdir(raw_dataDir):
     tot = 0
     cnt = 0
     flag = 0
+    mark = ""
     istext = ""
+    print(re.match("(.*).txt",file))
     if(re.match("(.*).txt",file)) :
         print("now solve "+file)
         with open(raw_dataDir+"/"+file,"r") as f:
@@ -68,52 +115,10 @@ for file in os.listdir(raw_dataDir):
                     else:
                         w.write('\n')
                     flag2 = (flag2 + 1) % 2
-    print(data)
-
-    # with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+istext,"w") as w:
-    #     print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
-    #     w.write(str(tot)+"\n")
-    #     flag=0
-    #     for item in data:
-    #         w.write(str(item))
-    #         if flag2 == 0 :
-    #             w.write(' ')
-    #         else :
-    #             w.write('\n')
-    #         flag2 = (flag2 + 1)% 2
-
-def baseline(data):
-    with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+istext,"w") as w:
-        print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
-        w.write(str(tot)+"\n")
-        flag=0
-        for item in data:
-            w.write(str(item))
-            if flag2 == 0 :
-                w.write(' ')
-            else :
-                w.write('\n')
-            flag2 = (flag2 + 1)% 2
-
-def deleteEdge(data,rate):
-    with open(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file+istext,"w") as w:
-        print(cur_path+"/data/"+mark+"-"+str(tot)+"-"+file)
-        w.write(str(tot)+"\n")
-        flag=0
-        for i in range(len(data),step=2):
-            if random.random() < rate : continue;
-            w.write(str(data[i])+" "+str(data[i+1])+"\n")
-
-def AddEdge(data,rate,mark):
-    dic = {}
-    for i in range(len(data), step=2):
-        dic[(data[i],data[i+1])] = 1
-        if mark == "undirected" :
-            dic[(data[i+1], data[i])] = 1
-
-    cnt = data.
-
-
+    if mark != "":
+        deleteEdge(file=file,tot=tot,data=copy.deepcopy(data),rate=0.5,mark=mark,istext=istext)
+        AddEdge(file=file,tot=tot,data=copy.deepcopy(data),rate=0.5,mark=mark,istext=istext)
+        baseline(file=file, tot=tot, data=copy.deepcopy(data), mark=mark, istext=istext)
 
 
 
