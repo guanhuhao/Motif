@@ -1,0 +1,24 @@
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5
+Opening /home/guan/桌面/Motif/result/undirected-688-yeast.txt-AddEdge0.5/adjMatrix.txt ...
+
+Real Graph Completed!!!
+Destroying graph ...
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 2151 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 361180
+Number of non-isomorphic classes: 54
+
+Time Used for Main:      0.099401
+Avg Time Used for Rands: 0.000000
+
+mytest:
+Init and Load Time: 0.001700
+CPU RunTime: 0.099401
+
+=============================

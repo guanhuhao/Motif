@@ -1,0 +1,24 @@
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/directed-5242-ca-GrQc.txt-DeleteEdge0.5
+Opening /home/guan/桌面/Motif/result/directed-5242-ca-GrQc.txt-DeleteEdge0.5/adjMatrix.txt ...
+
+Real Graph Completed!!!
+Destroying graph ...
+
+===========RESULTS===========
+
+Topography of Original Network: 5242 nodes and 14487 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 1178627
+Number of non-isomorphic classes: 199
+
+Time Used for Main:      0.347678
+Avg Time Used for Rands: 0.000000
+
+mytest:
+Init and Load Time: 0.021670
+CPU RunTime: 0.347678
+
+=============================

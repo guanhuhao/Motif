@@ -1,0 +1,9 @@
+/home/guan/桌面/Motif/tmp/directed-6301-p2p-Gnutella08.txt-DeleteEdge0.5 4 100
+/home/guan/桌面/Motif/tmp/undirected-688-yeast.txt 4 100
+/home/guan/桌面/Motif/tmp/directed-8114-p2p-Gnutella09.txt-DeleteEdge0.5 4 100
+/home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5 4 100
+/home/guan/桌面/Motif/tmp/undirected-3401-musae_PTBR_edges.csv-DeleteEdge0.5.txt 4 100
+/home/guan/桌面/Motif/tmp/directed-5242-ca-GrQc.txt-DeleteEdge0.5 4 100
+/home/guan/桌面/Motif/tmp/undirected-11402-lastfm_asia_edges.csv-DeleteEdge0.5.txt 4 100
+/home/guan/桌面/Motif/tmp/undirected-3783-soc-sign-bitcoinalpha.csv-DeleteEdge0.5.txt 4 100
+/home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-DeleteEdge0.5 4 100
