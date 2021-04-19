@@ -1,0 +1,176 @@
+Using Device 0: "GeForce GTX 1060 6GB"
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5
+
+Real Graph Completed!!!
+
+Number of Random Graphs: 100
+mean:
+166853600.000000
+10579264.000000
+100656792.000000
+200560.000000
+351880.000000
+2248.000000
+
+Random Graphs Completed!!!
+Writing ZScores to /home/guan/桌面/Motif/result/undirected-688-yeast.txt-AddEdge0.5/ZScore.txt ...
+mean:
+1668536.000000
+105792.640000
+1006567.920000
+2005.600000
+3518.800000
+22.480000
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 2151 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 0
+Number of non-isomorphic classes: 0
+
+Time Used for Main:      0.000000
+Avg Time Used for Rands: 0.000052
+
+mytest:
+Init and Load Time: 0.058800
+CPU RunTime: 0.000000
+GPU Runtime: 2.717292
+Totol Runtime: 2.776097
+
+=============================
+Using Device 0: "GeForce GTX 1060 6GB"
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5
+
+Real Graph Completed!!!
+
+Number of Random Graphs: 100
+mean:
+166853600.000000
+10731776.000000
+100026032.000000
+209720.000000
+351400.000000
+2584.000000
+
+Random Graphs Completed!!!
+Writing ZScores to /home/guan/桌面/Motif/result/undirected-688-yeast.txt-AddEdge0.5/ZScore.txt ...
+mean:
+1668536.000000
+107317.760000
+1000260.320000
+2097.200000
+3514.000000
+25.840000
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 2151 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 0
+Number of non-isomorphic classes: 0
+
+Time Used for Main:      0.000000
+Avg Time Used for Rands: 0.000052
+
+mytest:
+Init and Load Time: 0.063400
+CPU RunTime: 0.000000
+GPU Runtime: 2.717111
+Totol Runtime: 2.780518
+
+=============================
+Using Device 0: "GeForce GTX 1060 6GB"
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5
+
+Real Graph Completed!!!
+
+Number of Random Graphs: 100
+mean:
+166853600.000000
+10528776.000000
+100063440.000000
+197944.000000
+347584.000000
+2184.000000
+
+Random Graphs Completed!!!
+Writing ZScores to /home/guan/桌面/Motif/result/undirected-688-yeast.txt-AddEdge0.5/ZScore.txt ...
+mean:
+1668536.000000
+105287.760000
+1000634.400000
+1979.440000
+3475.840000
+21.840000
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 2151 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 0
+Number of non-isomorphic classes: 0
+
+Time Used for Main:      0.000000
+Avg Time Used for Rands: 0.000055
+
+mytest:
+Init and Load Time: 0.056808
+CPU RunTime: 0.000000
+GPU Runtime: 2.702930
+Totol Runtime: 2.759743
+
+=============================
+Using Device 0: "GeForce GTX 1060 6GB"
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/undirected-688-yeast.txt-AddEdge0.5
+
+Real Graph Completed!!!
+
+Number of Random Graphs: 100
+mean:
+166853600.000000
+10642704.000000
+100505776.000000
+205040.000000
+351504.000000
+2576.000000
+
+Random Graphs Completed!!!
+Writing ZScores to /home/guan/桌面/Motif/result/undirected-688-yeast.txt-AddEdge0.5/ZScore.txt ...
+mean:
+1668536.000000
+106427.040000
+1005057.760000
+2050.400000
+3515.040000
+25.760000
+
+===========RESULTS===========
+
+Topography of Original Network: 688 nodes and 2151 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 0
+Number of non-isomorphic classes: 0
+
+Time Used for Main:      0.000000
+Avg Time Used for Rands: 0.000054
+
+mytest:
+Init and Load Time: 0.057101
+CPU RunTime: 0.000000
+GPU Runtime: 2.687671
+Totol Runtime: 2.744777
+
+=============================

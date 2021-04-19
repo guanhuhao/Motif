@@ -1,0 +1,33 @@
+TOTAL NUMBER OF CLASSES:: 0
+
+ID 		 NUM IN REAL 		 MEAN IN RANDOM 	 VAR IN RANDOM 		 ZSCORE
+14 		 53889 		 -nan 		 -nan 		 -nan
+28 		 60559 		 -nan 		 -nan 		 -nan
+74 		 120963 		 -nan 		 -nan 		 -nan
+140 		 377265 		 -nan 		 -nan 		 -nan
+142 		 1091 		 -nan 		 -nan 		 -nan
+202 		 1135 		 -nan 		 -nan 		 -nan
+204 		 5102 		 -nan 		 -nan 		 -nan
+206 		 32 		 -nan 		 -nan 		 -nan
+540 		 114 		 -nan 		 -nan 		 -nan
+642 		 128842 		 37.227581 		 -nan 		 -nan
+644 		 57477 		 -nan 		 -nan 		 -nan
+648 		 248677 		 -nan 		 -nan 		 -nan
+652 		 463 		 -nan 		 -nan 		 -nan
+668 		 4 		 -nan 		 37.227581 		 0.101000
+2076 		 802 		 -nan 		 -nan 		 -nan
+2118 		 872 		 -nan 		 -nan 		 -nan
+2124 		 7224 		 -nan 		 -nan 		 -nan
+2126 		 26 		 -nan 		 -nan 		 -nan
+2182 		 182 		 -nan 		 -nan 		 -nan
+2184 		 427740 		 -nan 		 -nan 		 -nan
+2188 		 7763 		 1.996071 		 -nan 		 -nan
+2190 		 6 		 0.084853 		 -nan 		 -nan
+2246 		 24 		 -nan 		 -nan 		 -nan
+2250 		 23 		 -nan 		 -nan 		 -nan
+2252 		 304 		 -nan 		 1.996071 		 150.555756
+2254 		 3 		 0.014142 		 0.084853 		 35.119637
+16920 		 7 		 2.600000 		 -nan 		 -nan
+17032 		 398 		 85.250000 		 -nan 		 -nan
+17036 		 16 		 0.210000 		 -nan 		 -nan
+17038 		 1 		 0.000000 		 0.014142 		 70.710678

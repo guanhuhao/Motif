@@ -30,9 +30,6 @@ class Assignment:
             for line in file: dic["edgeNum"] += 1
 
         if (re.search(r'undirected',self.filename) != None): self.is_directed = False
-        # print("filename:"+self.filename)
-        # print("is_direct?:"+str(re.search(r'undirected',self.filename)))
-        # print()
         return dic
 
     def _predict_run_time(self):
@@ -45,8 +42,6 @@ class Assignment:
         self.GPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
 
     async def run_CPU(self,id,que_CPU_res,que_GPU_task):
-        print("task begin:")
-        print("CPUid: "+str(id)+" que_size:"+str(que_CPU_res.qsize()))
         if(self.is_directed) :
             isDirect = ""
         else :
@@ -58,11 +53,10 @@ class Assignment:
 
         cmd = exec_CPU+" -i " + self.path+" -s " + str(self.k) + " -r " + str(self.repeat)+" -o "+ \
             result_path + " -g " + str(0) + isDirect +" >"+result_path+"/CPUlog"
-        print(cmd)
+        print("run CPU:"+cmd)
         p = subprocess.Popen(cmd,shell=True)
         while True:
             await asyncio.sleep(1)
-            # print(p.poll())
             if p.poll() != None:
                 que_CPU_res.put(id)
                 break
@@ -81,7 +75,7 @@ class Assignment:
 
         cmd = exec_GPU + " -i " + self.path + " -s " + str(self.k) + " -r " + str(self.repeat) + " -o " + \
               result_path + " -g " + str(GPUID) + isDirect + " >>" + result_path + "/GPUlog"
-        print(cmd)
+        print("run GPU:"+cmd)
         p = subprocess.Popen(cmd, shell=True)
         while True:
             await asyncio.sleep(1)
@@ -95,8 +89,6 @@ class Assignment:
         self.repeat = repeat
         self.path = os.path.abspath(os.path.join(os.getcwd(),path))
         self.filename = self.path.split('/')[-1]
-        # print(self.path)
-        # print (self.filename)
 
         self._predict_run_time()
 
@@ -107,10 +99,8 @@ class Manager:
 
     async def get_CPU(self):
         while(self.resource_CPU.empty()):
-            # print("rest CPU:"+str(self.resource_CPU.qsize()))
             await asyncio.sleep(1)
         tmp = self.resource_CPU.get()
-        # print(tmp)
         return tmp
 
     def free_CPU(self,id = 0):
@@ -149,8 +139,7 @@ class Manager:
                 line = line[0:-1]
                 line = line.split(" ")
                 item = Assignment(path=line[0], k=int(line[1]), repeat=int(line[2]))
-                self.add_GPU_task(item)
-        print("waitlist len:"+str(self.waitlist_CPU.qsize()))
+                self.add_CPU_task(item)
 
     def _init_thread(self):
         self.resource_CPU = Queue(maxsize=self.CPU_Num)
@@ -171,7 +160,6 @@ class Manager:
             task = await self.get_CPU_task()
             id = await self.get_CPU()
             asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU))
-            print("!!!!!!!!!!!!!!!:"+str(self.waitlist_GPU.qsize()))
 
     async def run_GPU(self):
         while(True):
@@ -180,8 +168,10 @@ class Manager:
             asyncio.create_task(task.run_GPU(id,self.resource_GPU))
 
     async def main(self):
-        asyncio.create_task(self.run_CPU())
-        # asyncio.create_task(self.run_GPU())
+        CPU = asyncio.create_task(self.run_CPU())
+        GPU = asyncio.create_task(self.run_GPU())
+        await CPU
+        await GPU
 
 
 

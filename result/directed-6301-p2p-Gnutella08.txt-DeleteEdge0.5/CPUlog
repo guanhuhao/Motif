@@ -1,0 +1,24 @@
+Motif Size: 4
+Input Graph: /home/guan/桌面/Motif/tmp/directed-6301-p2p-Gnutella08.txt-DeleteEdge0.5
+Opening /home/guan/桌面/Motif/result/directed-6301-p2p-Gnutella08.txt-DeleteEdge0.5/adjMatrix.txt ...
+
+Real Graph Completed!!!
+Destroying graph ...
+
+===========RESULTS===========
+
+Topography of Original Network: 6301 nodes and 10381 edges
+
+Motif Size: 4
+
+Total number of subgraphs in original network: 1305384
+Number of non-isomorphic classes: 31
+
+Time Used for Main:      0.379143
+Avg Time Used for Rands: 0.000000
+
+mytest:
+Init and Load Time: 0.026289
+CPU RunTime: 0.379143
+
+=============================
