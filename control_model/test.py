@@ -40,5 +40,7 @@ async def main():
 # test.run_GPU()
 
 manager = Manager()
-asyncio.run(manager.run_CPU())
+
+# asyncio.run(manager.run_CPU())
+asyncio.run(manager.run_GPU())
 

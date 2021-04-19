@@ -15,7 +15,7 @@ class Assignment:
     repeat = 100
     k = 0
     path = ""
-    is_directed = False
+    is_directed = True
     filename = ""
 
     _CPU_finished = False
@@ -29,8 +29,10 @@ class Assignment:
             dic["edgeNum"] = 0;
             for line in file: dic["edgeNum"] += 1
 
-        if (re.search(r'undirected',self.filename) == None): isDirected = ""
-        print()
+        if (re.search(r'undirected',self.filename) != None): self.is_directed = False
+        # print("filename:"+self.filename)
+        # print("is_direct?:"+str(re.search(r'undirected',self.filename)))
+        # print()
         return dic
 
     def _predict_run_time(self):
@@ -42,11 +44,13 @@ class Assignment:
         model = models.load_model("./prediction/GPUTime.h5")
         self.GPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
 
-    async def run_CPU(self,id,que):
+    async def run_CPU(self,id,que_CPU_res,que_GPU_task):
         print("task begin:")
-        print("CPUid: "+str(id)+" que_size:"+str(que.qsize()))
-        if(self.is_directed) : isDirect = " -u"
-        else : isDirect = ""
+        print("CPUid: "+str(id)+" que_size:"+str(que_CPU_res.qsize()))
+        if(self.is_directed) :
+            isDirect = ""
+        else :
+            isDirect = " -u"
 
         result_path = os.path.abspath(os.path.join(os.getcwd(),"../result"))
         os.system("mkdir "+result_path+"/"+self.filename)
@@ -60,15 +64,16 @@ class Assignment:
             await asyncio.sleep(1)
             # print(p.poll())
             if p.poll() != None:
-                que.put(id)
+                que_CPU_res.put(id)
                 break
+        que_GPU_task.put(self)
         return p
 
     async def run_GPU(self,GPUID,que):
         if (self.is_directed):
-            isDirect = " -u"
-        else:
             isDirect = ""
+        else:
+            isDirect = " -u"
 
         result_path = os.path.abspath(os.path.join(os.getcwd(), "../result"))
         # os.system("mkdir " + result_path + "/" + self.filename)  #because run_CPU has mkdir
@@ -97,7 +102,7 @@ class Assignment:
 
 
 class Manager:
-    GPU_Num = 4
+    GPU_Num = 1
     CPU_Num = 4
 
     async def get_CPU(self):
@@ -119,7 +124,21 @@ class Manager:
     def free_GPU(self,id):
         self.resource_GPU.put(id)
 
-    # def wait_CPU(self0):
+    def add_CPU_task(self,task):
+        self.waitlist_CPU.put(task)
+
+    def add_GPU_task(self,task):
+        self.waitlist_GPU.put(task)
+
+    async def get_CPU_task(self):
+        while(self.waitlist_CPU.empty()):
+            await asyncio.sleep(1)
+        return self.waitlist_CPU.get()
+
+    async def get_GPU_task(self):
+        while(self.waitlist_GPU.empty()):
+            await asyncio.sleep(1)
+        return self.waitlist_GPU.get()
 
     def _init_task(self):
         self.waitlist_CPU = Queue()
@@ -130,7 +149,7 @@ class Manager:
                 line = line[0:-1]
                 line = line.split(" ")
                 item = Assignment(path=line[0], k=int(line[1]), repeat=int(line[2]))
-                self.waitlist_CPU.put(item)
+                self.add_GPU_task(item)
         print("waitlist len:"+str(self.waitlist_CPU.qsize()))
 
     def _init_thread(self):
@@ -149,14 +168,21 @@ class Manager:
 
     async def run_CPU(self):
         while(True):
+            task = await self.get_CPU_task()
             id = await self.get_CPU()
-            if(self.waitlist_CPU.empty()) : continue
-            # id = self.get_CPU()
-            print("get CPU:"+str(id))
-            task = self.waitlist_CPU.get();
-            print("get task:");
-            print(task)
-            asyncio.create_task(task.run_CPU(id,self.resource_CPU))
+            asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU))
+            print("!!!!!!!!!!!!!!!:"+str(self.waitlist_GPU.qsize()))
+
+    async def run_GPU(self):
+        while(True):
+            task = await self.get_GPU_task()
+            id = await self.get_GPU()
+            asyncio.create_task(task.run_GPU(id,self.resource_GPU))
+
+    async def main(self):
+        asyncio.create_task(self.run_CPU())
+        # asyncio.create_task(self.run_GPU())
+
 
 
 
