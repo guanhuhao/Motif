@@ -1,9 +1,10 @@
 from keras import models
 import asyncio
 import os
-from queue import Queue
+from queue import Queue,PriorityQueue
 import subprocess
 import re
+import random
 
 exec_CPU = os.path.abspath(os.path.join(os.getcwd(),"../CPU"))
 exec_GPU = os.path.abspath(os.path.join(os.getcwd(),"../GPU"))
@@ -20,6 +21,8 @@ class Assignment:
 
     _CPU_finished = False
     _GPU_finished = False
+
+    priority = 0
 
 
     def get_info(self):
@@ -41,7 +44,18 @@ class Assignment:
         model = models.load_model("./prediction/GPUTime.h5")
         self.GPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
 
-    async def run_CPU(self,id,que_CPU_res,que_GPU_task):
+    async def run_CPU(self,id,que_CPU_res,que_GPU_task,is_test = 0):
+        if(is_test == 1):
+            cmd = "python ./sleep.py"
+            p = subprocess.Popen(cmd, shell=True)
+            while True:
+                await asyncio.sleep(1)
+                if p.poll() != None:
+                    que_CPU_res.put(id)
+                    break
+            que_GPU_task.put(self)
+            return p
+
         if(self.is_directed) :
             isDirect = ""
         else :
@@ -53,7 +67,7 @@ class Assignment:
 
         cmd = exec_CPU+" -i " + self.path+" -s " + str(self.k) + " -r " + str(self.repeat)+" -o "+ \
             result_path + " -g " + str(0) + isDirect +" >"+result_path+"/CPUlog"
-        print("run CPU:"+cmd)
+        # print("run CPU:"+cmd)
         p = subprocess.Popen(cmd,shell=True)
         while True:
             await asyncio.sleep(1)
@@ -63,7 +77,17 @@ class Assignment:
         que_GPU_task.put(self)
         return p
 
-    async def run_GPU(self,GPUID,que):
+    async def run_GPU(self,GPUID,que,is_test = 0):
+        if(is_test == 1):
+            cmd = "python ./sleep.py"
+            p = subprocess.Popen(cmd, shell=True)
+            while True:
+                await asyncio.sleep(1)
+                if p.poll() != None:
+                    que.put(GPUID)
+                    break;
+            return p
+
         if (self.is_directed):
             isDirect = ""
         else:
@@ -84,18 +108,38 @@ class Assignment:
                 break;
         return p
 
-    def __init__(self,path,k=4,repeat=100):
+    def __init__(self,path,k=4,repeat=100,priority_method = 0):
         self.k = k
         self.repeat = repeat
         self.path = os.path.abspath(os.path.join(os.getcwd(),path))
         self.filename = self.path.split('/')[-1]
-
         self._predict_run_time()
+
+        self.cal_priority(priority_method)
+
+    def __lt__(self, other):
+        return self.priority < other.priority;
+
+
+    def cal_priority(self,method = 0):
+        if method == 0 :
+            self.priority = 0;
+        elif method == 1:
+            maxi = 0;
+            pos = 0;
+            for i in range(len(self.CPU_time)):
+                if self.CPU_time[i] > maxi :
+                    maxi =self.CPU_time
+                    pos = i;
+            self.priority = pos
+        # elif method == 2:
+
 
 
 class Manager:
     GPU_Num = 1
     CPU_Num = 4
+    is_test = 0
 
     async def get_CPU(self):
         while(self.resource_CPU.empty()):
@@ -131,8 +175,9 @@ class Manager:
         return self.waitlist_GPU.get()
 
     def _init_task(self):
-        self.waitlist_CPU = Queue()
-        self.waitlist_GPU = Queue()
+        self.waitlist_CPU = PriorityQueue()
+        self.waitlist_GPU = PriorityQueue()
+        # self.waitlist_CPU.p
 
         with open("../task/task1.txt", "r") as r:
             for line in r:
@@ -144,14 +189,14 @@ class Manager:
     def _init_thread(self):
         self.resource_CPU = Queue(maxsize=self.CPU_Num)
         self.resource_GPU = Queue(maxsize=self.GPU_Num)
-        # self.resource_CPU.
 
         for i in range(self.CPU_Num):
             self.resource_CPU.put(i)
         for i in range(self.GPU_Num):
             self.resource_GPU.put(i)
 
-    def __init__(self):
+    def __init__(self,is_test = 0):
+        self.is_test = is_test;
         self._init_thread()
         self._init_task()
 
@@ -159,13 +204,13 @@ class Manager:
         while(True):
             task = await self.get_CPU_task()
             id = await self.get_CPU()
-            asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU))
+            asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU,is_test=self.is_test))
 
     async def run_GPU(self):
         while(True):
             task = await self.get_GPU_task()
             id = await self.get_GPU()
-            asyncio.create_task(task.run_GPU(id,self.resource_GPU))
+            asyncio.create_task(task.run_GPU(id,self.resource_GPU,is_test=self.is_test))
 
     async def main(self):
         CPU = asyncio.create_task(self.run_CPU())

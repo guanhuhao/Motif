@@ -1,3 +1,5 @@
+import random
+
 from assignment import Assignment,Manager
 import os
 import asyncio
@@ -39,8 +41,17 @@ async def main():
 # test.run_CPU()
 # test.run_GPU()
 
-manager = Manager()
+manager = Manager(is_test=1)
 
 asyncio.run(manager.main())
+
+# cmd = "python ./sleep.py"
+# print (cmd)
+# p = subprocess.Popen(cmd, shell=True)
+# while True:
+#     if p.poll() != None:
+#         print("finished!")
+#         break
+# print("管胡昊")
 # asyncio.run(manager.run_GPU())
 
