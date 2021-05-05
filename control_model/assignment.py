@@ -5,9 +5,11 @@ from queue import Queue,PriorityQueue
 import subprocess
 import re
 import random
+import time
 
-exec_CPU = os.path.abspath(os.path.join(os.getcwd(),"../CPU"))
-exec_GPU = os.path.abspath(os.path.join(os.getcwd(),"../GPU"))
+exec_CPU = os.path.abspath(os.path.join(os.getcwd(),"./CPU"))
+exec_GPU = os.path.abspath(os.path.join(os.getcwd(),"./GPU"))
+print(exec_GPU)
 
 class Assignment:
     CPU_time = 0
@@ -37,16 +39,16 @@ class Assignment:
 
     def _predict_run_time(self):
         dic = self.get_info()
-        model = models.load_model("./prediction/IniTime.h5")
+        model = models.load_model("./control_model/prediction/IniTime.h5")
         self.Ini_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
-        model = models.load_model("./prediction/CPUTime.h5")
+        model = models.load_model("./control_model/prediction/CPUTime.h5")
         self.CPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
-        model = models.load_model("./prediction/GPUTime.h5")
+        model = models.load_model("./control_model/prediction/GPUTime.h5")
         self.GPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
 
     async def run_CPU(self,id,que_CPU_res,que_GPU_task,is_test = 0):
         if(is_test == 1):
-            cmd = "python ./sleep.py"
+            cmd = "python ./control_model/sleep.py"
             p = subprocess.Popen(cmd, shell=True)
             while True:
                 await asyncio.sleep(1)
@@ -61,7 +63,7 @@ class Assignment:
         else :
             isDirect = " -u"
 
-        result_path = os.path.abspath(os.path.join(os.getcwd(),"../result"))
+        result_path = os.path.abspath(os.path.join(os.getcwd(),"./result"))
         os.system("mkdir "+result_path+"/"+self.filename)
         result_path = os.path.join(result_path,self.filename)
 
@@ -79,7 +81,7 @@ class Assignment:
 
     async def run_GPU(self,GPUID,que,is_test = 0):
         if(is_test == 1):
-            cmd = "python ./sleep.py"
+            cmd = "python ./control_model/sleep.py"
             p = subprocess.Popen(cmd, shell=True)
             while True:
                 await asyncio.sleep(1)
@@ -93,7 +95,7 @@ class Assignment:
         else:
             isDirect = " -u"
 
-        result_path = os.path.abspath(os.path.join(os.getcwd(), "../result"))
+        result_path = os.path.abspath(os.path.join(os.getcwd(), "./result"))
         # os.system("mkdir " + result_path + "/" + self.filename)  #because run_CPU has mkdir
         result_path = os.path.join(result_path, self.filename)
 
@@ -113,9 +115,9 @@ class Assignment:
         self.repeat = repeat
         self.path = os.path.abspath(os.path.join(os.getcwd(),path))
         self.filename = self.path.split('/')[-1]
-        self._predict_run_time()
+        # self._predict_run_time()
 
-        self.cal_priority(priority_method)
+        # self.cal_priority(priority_method)
 
     def __lt__(self, other):
         return self.priority < other.priority;
@@ -141,76 +143,94 @@ class Manager:
     CPU_Num = 4
     is_test = 0
 
-    async def get_CPU(self):
+    waitlist_CPU = PriorityQueue()
+    waitlist_GPU = PriorityQueue()
+
+    resource_CPU = Queue(maxsize=CPU_Num)
+    resource_GPU = Queue(maxsize=GPU_Num)
+
+    info_que = asyncio.Queue(10)
+
+    async def _get_CPU(self):
         while(self.resource_CPU.empty()):
             await asyncio.sleep(1)
         tmp = self.resource_CPU.get()
         return tmp
 
-    def free_CPU(self,id = 0):
+    def _free_CPU(self,id = 0):
         self.resource_CPU.put(id)
 
-    async def get_GPU(self):
+    async def _get_GPU(self):
         while(self.resource_GPU.empty()):
             await asyncio.sleep(1)
         return self.resource_GPU.get()
 
-    def free_GPU(self,id):
+    def _free_GPU(self,id):
         self.resource_GPU.put(id)
 
-    def add_CPU_task(self,task):
+    async def add_CPU_task(self,task):
+        await self.write_log("0000",task.path)
         self.waitlist_CPU.put(task)
 
     def add_GPU_task(self,task):
         self.waitlist_GPU.put(task)
 
-    async def get_CPU_task(self):
+    async def _get_CPU_task(self):
         while(self.waitlist_CPU.empty()):
             await asyncio.sleep(1)
         return self.waitlist_CPU.get()
 
-    async def get_GPU_task(self):
+    async def _get_GPU_task(self):
         while(self.waitlist_GPU.empty()):
             await asyncio.sleep(1)
         return self.waitlist_GPU.get()
 
     def _init_task(self):
-        self.waitlist_CPU = PriorityQueue()
-        self.waitlist_GPU = PriorityQueue()
         # self.waitlist_CPU.p
-
-        with open("../task/task1.txt", "r") as r:
+        with open("./task/task1.txt", "r") as r:
             for line in r:
                 line = line[0:-1]
                 line = line.split(" ")
                 item = Assignment(path=line[0], k=int(line[1]), repeat=int(line[2]))
+                print(line[0])
                 self.add_CPU_task(item)
 
     def _init_thread(self):
-        self.resource_CPU = Queue(maxsize=self.CPU_Num)
-        self.resource_GPU = Queue(maxsize=self.GPU_Num)
-
         for i in range(self.CPU_Num):
             self.resource_CPU.put(i)
         for i in range(self.GPU_Num):
             self.resource_GPU.put(i)
 
     def __init__(self,is_test = 0):
+        pipe = open("./pipe.txt","w")
+        pipe.close()
+
         self.is_test = is_test;
         self._init_thread()
         self._init_task()
+        #
+        # self.write_log("123","321")
 
     async def run_CPU(self):
         while(True):
-            task = await self.get_CPU_task()
-            id = await self.get_CPU()
+            task = await self._get_CPU_task()
+            id = await self._get_CPU()
             asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU,is_test=self.is_test))
 
     async def run_GPU(self):
         while(True):
-            task = await self.get_GPU_task()
-            id = await self.get_GPU()
+            task = await self._get_GPU_task()
+            id = await self._get_GPU()
             asyncio.create_task(task.run_GPU(id,self.resource_GPU,is_test=self.is_test))
+
+    async def write_log(self,typeid,contain):
+        curtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        pipe = open("./pipe.txt","a")
+        pipe.write(curtime+"|"+typeid+"|"+contain+"\n")
+        pipe.close()
+        await self.info_que.put([curtime, typeid, contain])
+        print(self.info_que.qsize())
+
 
     async def main(self):
         CPU = asyncio.create_task(self.run_CPU())
