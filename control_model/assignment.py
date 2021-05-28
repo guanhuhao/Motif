@@ -6,6 +6,7 @@ import subprocess
 import re
 import random
 import time
+import copy
 
 exec_CPU = os.path.abspath(os.path.join(os.getcwd(),"./CPU"))
 exec_GPU = os.path.abspath(os.path.join(os.getcwd(),"./GPU"))
@@ -14,7 +15,7 @@ print(exec_GPU)
 class Assignment:
     CPU_time = 0
     GPU_time = 0
-    Init_ime = 0
+    Ini_time = 0
     repeat = 100
     k = 0
     path = ""
@@ -23,6 +24,7 @@ class Assignment:
 
     _CPU_finished = False
     _GPU_finished = False
+    dic = {}
 
     priority = 0
 
@@ -38,15 +40,16 @@ class Assignment:
         return dic
 
     def _predict_run_time(self):
-        dic = self.get_info()
+        self.dic = self.get_info()
         model = models.load_model("./control_model/prediction/IniTime.h5")
-        self.Ini_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
+        self.Ini_time = model.predict([[self.k,self.dic["vexNum"],self.dic["edgeNum"]]])
         model = models.load_model("./control_model/prediction/CPUTime.h5")
-        self.CPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
+        self.CPU_time = model.predict([[self.k,self.dic["vexNum"],self.dic["edgeNum"]]])
         model = models.load_model("./control_model/prediction/GPUTime.h5")
-        self.GPU_time = model.predict([[self.k,dic["vexNum"],dic["edgeNum"]]])
+        self.GPU_time = model.predict([[self.k,self.dic["vexNum"],self.dic["edgeNum"]]])
 
-    async def run_CPU(self,id,que_CPU_res,que_GPU_task,is_test = 0):
+    async def run_CPU(self,id,que_CPU_res,que_GPU_task,is_test = 0,cnt_CPU=0):
+        # print("haha")
         if(is_test == 1):
             cmd = "python ./control_model/sleep.py"
             p = subprocess.Popen(cmd, shell=True)
@@ -56,6 +59,7 @@ class Assignment:
                     que_CPU_res.put(id)
                     break
             que_GPU_task.put(self)
+            self.write_log("000004", "no."+str(cnt_CPU) + " CPU task is finished and recycle CPU resource ...")
             return p
 
         if(self.is_directed) :
@@ -79,7 +83,7 @@ class Assignment:
         que_GPU_task.put(self)
         return p
 
-    async def run_GPU(self,GPUID,que,is_test = 0):
+    async def run_GPU(self,GPUID,que,is_test = 0,cnt_GPU=0):
         if(is_test == 1):
             cmd = "python ./control_model/sleep.py"
             p = subprocess.Popen(cmd, shell=True)
@@ -88,6 +92,7 @@ class Assignment:
                 if p.poll() != None:
                     que.put(GPUID)
                     break;
+            self.write_log("000014", "no."+str(cnt_GPU) + " GPU task is finished and recycle GPU resource ...")
             return p
 
         if (self.is_directed):
@@ -136,10 +141,18 @@ class Assignment:
             self.priority = pos
         # elif method == 2:
 
+    def write_log(self,typeid,contain):
+        curtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        pipe = open("./pipe.txt","a")
+        pipe.write(curtime+"|"+typeid+"|"+contain+"\n")
+        print(curtime+"|"+typeid+"|"+contain)
+        pipe.close()
+        # self.info_que.put([curtime,typeid,contain])
+
 
 
 class Manager:
-    GPU_Num = 1
+    GPU_Num = 3
     CPU_Num = 4
     is_test = 0
 
@@ -149,7 +162,10 @@ class Manager:
     resource_CPU = Queue(maxsize=CPU_Num)
     resource_GPU = Queue(maxsize=GPU_Num)
 
-    info_que = asyncio.Queue(10)
+    info_que = Queue(10)
+
+    cnt_CPU = 0
+    cnt_GPU = 0
 
     async def _get_CPU(self):
         while(self.resource_CPU.empty()):
@@ -168,8 +184,8 @@ class Manager:
     def _free_GPU(self,id):
         self.resource_GPU.put(id)
 
-    async def add_CPU_task(self,task):
-        await self.write_log("0000",task.path)
+    def add_CPU_task(self,task):
+        # self.write_log("0000",task.path)
         self.waitlist_CPU.put(task)
 
     def add_GPU_task(self,task):
@@ -192,7 +208,7 @@ class Manager:
                 line = line[0:-1]
                 line = line.split(" ")
                 item = Assignment(path=line[0], k=int(line[1]), repeat=int(line[2]))
-                print(line[0])
+                # print(line[0])
                 self.add_CPU_task(item)
 
     def _init_thread(self):
@@ -201,11 +217,14 @@ class Manager:
         for i in range(self.GPU_Num):
             self.resource_GPU.put(i)
 
-    def __init__(self,is_test = 0):
+    def __init__(self,GPU_Num = 1,CPU_Num = 4,is_test = 0):
         pipe = open("./pipe.txt","w")
         pipe.close()
 
         self.is_test = is_test;
+        self.CPU_Num=CPU_Num;
+        self.GPU_Num=GPU_Num;
+
         self._init_thread()
         self._init_task()
         #
@@ -213,23 +232,32 @@ class Manager:
 
     async def run_CPU(self):
         while(True):
+            self.write_log("000001", "no."+str(self.cnt_CPU)+" CPU task is wating assignment...")
             task = await self._get_CPU_task()
+            self.write_log("000002", "no."+str(self.cnt_CPU) + " CPU task got assignment and wating for rest CPU resource...")
             id = await self._get_CPU()
-            asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU,is_test=self.is_test))
+            self.write_log("000003", "no."+str(self.cnt_CPU) + " CPU task got CPU resource, now begin solve...")
+            asyncio.create_task(task.run_CPU(id,self.resource_CPU,self.waitlist_GPU,is_test=self.is_test,cnt_CPU=copy.deepcopy(self.cnt_CPU)))
+            self.cnt_CPU += 1
 
     async def run_GPU(self):
         while(True):
+            self.write_log("000011", "no."+str(self.cnt_GPU) + " GPU task is wating assignment...")
             task = await self._get_GPU_task()
+            self.write_log("000012", "no."+str(self.cnt_GPU) + " GPU task got assignment and wating for rest CPU resource...")
             id = await self._get_GPU()
-            asyncio.create_task(task.run_GPU(id,self.resource_GPU,is_test=self.is_test))
+            self.write_log("000013", "no."+str(self.cnt_GPU) + " GPU task got CPU resource, now begin solve...")
+            asyncio.create_task(task.run_GPU(id,self.resource_GPU,is_test=self.is_test,cnt_GPU=copy.deepcopy(self.cnt_GPU)))
+            self.cnt_GPU += 1
 
-    async def write_log(self,typeid,contain):
+    def write_log(self,typeid,contain):
         curtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         pipe = open("./pipe.txt","a")
         pipe.write(curtime+"|"+typeid+"|"+contain+"\n")
+        print(curtime+"|"+typeid+"|"+contain)
         pipe.close()
-        await self.info_que.put([curtime, typeid, contain])
-        print(self.info_que.qsize())
+        # self.info_que.put([curtime,typeid,contain])
+        # print(self.info_que.qsize())
 
 
     async def main(self):

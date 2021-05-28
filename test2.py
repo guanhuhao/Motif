@@ -12,10 +12,17 @@ async def main():
         while(True):
             await  asyncio.sleep(1)
             contain = r.read()
-            if contain == None :continue;
+            if contain == None or contain =='' :continue;
             break
-        if int(contain) == 10:
-            print("haha")
+        print(contain)
+        # break
 
-asyncio.run(main())
 
+# asyncio.run(main())
+
+loop = asyncio.get_event_loop()
+print(321)
+a = loop.create_task(main())
+# loop.run_until_complete(a)
+loop.run_forever()
+print(123)

@@ -395,5 +395,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Run</sender>
+   <signal>pressed()</signal>
+   <receiver>Form</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1041</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>545</x>
+     <y>339</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

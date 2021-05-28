@@ -4,7 +4,7 @@ cnt = 0;
 w = open("test.txt", "w")
 w.close()
 while(True):
-    time.sleep(1)
+    time.sleep(3)
     w = open("test.txt", "a")
     w.write(str(cnt+1)+"\n")
     w.close()

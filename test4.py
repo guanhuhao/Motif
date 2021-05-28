@@ -1,6 +1,6 @@
 import random
 
-from assignment import Assignment,Manager
+from control_model.assignment import Assignment,Manager
 import os
 import asyncio
 import time
