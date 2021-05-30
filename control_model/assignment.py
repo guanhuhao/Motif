@@ -81,6 +81,7 @@ class Assignment:
                 que_CPU_res.put(id)
                 break
         que_GPU_task.put(self)
+        self.write_log("000004", "no." + str(cnt_CPU) + " CPU task is finished and recycle CPU resource ...")
         return p
 
     async def run_GPU(self,GPUID,que,is_test = 0,cnt_GPU=0):
@@ -113,6 +114,7 @@ class Assignment:
             if p.poll() != None:
                 que.put(GPUID)
                 break;
+            self.write_log("000014", "no." + str(cnt_GPU) + " GPU task is finished and recycle GPU resource ...")
         return p
 
     def __init__(self,path,k=4,repeat=100,priority_method = 0):
