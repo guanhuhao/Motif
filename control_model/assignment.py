@@ -154,7 +154,7 @@ class Assignment:
 
 
 class Manager:
-    GPU_Num = 3
+    GPU_Num = 4
     CPU_Num = 4
     is_test = 0
 
