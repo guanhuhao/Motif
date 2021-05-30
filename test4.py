@@ -43,8 +43,9 @@ async def main():
 
 manager = Manager(is_test=1)
 
-asyncio.run(manager.main())
-
+#asyncio.run(manager.main())
+loop = asyncio.get_event_loop()
+result = loop.run_until_complete(manager.main())
 # cmd = "python ./sleep.py"
 # print (cmd)
 # p = subprocess.Popen(cmd, shell=True)
