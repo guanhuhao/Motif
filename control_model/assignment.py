@@ -122,7 +122,7 @@ class Assignment:
         self.repeat = repeat
         self.path = os.path.abspath(os.path.join(os.getcwd(),path))
         self.filename = self.path.split('/')[-1]
-        # self._predict_run_time()
+        self._predict_run_time()
 
         # self.cal_priority(priority_method)
 
